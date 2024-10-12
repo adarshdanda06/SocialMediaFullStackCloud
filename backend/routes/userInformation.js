@@ -1,15 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const AWS = require('aws-sdk');
+const { ssrModuleExportsKey } = require('vite/runtime');
 
-AWS.config.update({
-    region: 'us-east-1'
-});
+//AWS.config.update({
+//   region: 'us-east-1'
+//});
 
-const dynamoDB = AWS.DynamoDB.DocumentClient();
-const dynamoTableName = 'users';
+// const dynamoDB = AWS.DynamoDB.DocumentClient();
+// const dynamoTableName = 'users';
+//router.get('/hi', (req, res) => {
+//    res.send({"hi": "hi"});
+//});
 
-router.get('/:userID/countAttrs', async (req, res) => {
+//modules.export = router;
+/*router.get('/:userID/countAttrs', async (req, res) => {
     const params = {
         TableName: dynamoTableName,
         ExpressionAttributeValues: {
@@ -24,9 +29,10 @@ router.get('/:userID/countAttrs', async (req, res) => {
         console.error('Result error was:' + error);
         res.status(500).send(error);
     });
-});
+});*/
 
 
+/*
 router.get('/:userID/infoAttrs', async (req, res) => {
     const params = {
         TableName: dynamoTableName,
@@ -58,4 +64,5 @@ router.post('/createAccount', async (req, res) => {
         TableName: dynamoTableName,
         Item: reqBody
     }
-});
+}); */
+

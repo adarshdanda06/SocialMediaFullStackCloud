@@ -1,4 +1,4 @@
-const express = require('express');
+/* const express = require('express');
 const router = express.Router();
 const AWS = require('aws-sdk');
 
@@ -20,4 +20,4 @@ router.get('/:userIDPost/:postID', async (req, res) => {
         console.error('Result error was: '+ error);
         res.status(500).send(error);
     })
-})
+}); */

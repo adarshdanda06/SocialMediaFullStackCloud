@@ -1,23 +1,28 @@
 /* const express = require('express');
 const router = express.Router();
-const AWS = require('aws-sdk');
+const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
+const { awsConfig } = require('../config');
 
-const dynamoDB = AWS.DynamoDB.DocumentClient();
-const dynamoTableName = 'users';
 
-router.get('/:userIDPost/:postID', async (req, res) => {
+const ddbClient = new DynamoDBClient(awsConfig);
+const dynamoTableName = 'Social';
+
+router.get('/:userID/following', async (req, res) => {
     const params = {
-        TableName: dynamoTableName,
-        ExpressionAttributeValues: {
-            "PK": req.params["userIDPost"] + "#post",
-            "SK": req.params["postID"]
-        },
-        Select: "ALL_ATTRIBUTES"
+      TableName: dynamoTableName,
+      Key: {
+          PK: {
+              S: req.params["userID"] + "#following"
+          },
+          SK: {
+              S: 'count'
+          }
+      }
     };
-    await dynamoDB.query(params).promise().then(response => {
-        res.send(response);
-    }).catch(error => {
-        console.error('Result error was: '+ error);
-        res.status(500).send(error);
-    })
-}); */
+    await ddbClient.send(new GetItemCommand(params)).then(result => {
+        res.send(result.Item)
+      }).catch(error => {
+        res.status(500).send(error)
+      })
+  });
+*/

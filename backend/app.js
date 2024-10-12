@@ -4,17 +4,15 @@ const PORT = process.env.PORT || 3000; // will be using set port later
 
 
 const userRoutes = require('./routes/user');
-// const productRoutes = require('./routes/products');
-
-
+const followingRoutes = require('./routes/followerInfo');
 app.use(express.json());
+
 app.get('/', (req, res) => {
     res.send('hi')
 });
-app.use('/users', userRoutes);
-// app.use('/products', productRoutes);
 
-// ... other app setup
+app.use('/followingInfo', followingRoutes);
+app.use('/users', userRoutes);
 
 app.listen(PORT, () => {
     console.log(`Listening on localhost:${PORT}`)

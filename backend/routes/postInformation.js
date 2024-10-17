@@ -24,14 +24,13 @@ router.get('/:postID/likelist', async (req, res) => {
       res.status(500).send(error)
     })
 });
-/*
-Route below is currently not working, fix soon
+
 router.get('/:userID/:postID/posts', async (req, res) => {
   const params = {
     TableName: dynamoTableName,
     Key: {
         PK: {
-            S: req.params["userID"] + "#post"
+            S: req.params["userID"] + "#posts"
         },
         SK: {
             S: req.params["postID"]
@@ -44,5 +43,5 @@ router.get('/:userID/:postID/posts', async (req, res) => {
       res.status(500).send(error)
     })
 });
-*/ 
+
 module.exports = router

@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const app = express();
 const PORT = process.env.PORT || 3000; // will be using set port later
 
@@ -13,10 +14,16 @@ app.get('/', (req, res) => {
     res.send('hi')
 });
 
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true
+}));
 app.use('/postInfo', postRoutes);
 app.use('/followingInfo', followingRoutes);
 app.use('/users', userRoutes);
 app.use('/loginActions', loginRegisterRoutes)
+
 
 
 app.listen(PORT, () => {

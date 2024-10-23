@@ -14,7 +14,7 @@ const dynamoTableName = 'Social';
 // check below for user auth and protected routes
 // 2. https://medium.com/@maison.moa/using-jwt-json-web-tokens-to-authorize-users-and-protect-api-routes-3e04a1453c3e
 
-
+//register fully works
 router.post('/register', async (req, res) => {
     const { username, password } = req.body
     const userAccount = username + "#account"
@@ -62,6 +62,8 @@ router.post('/register', async (req, res) => {
     }
   });
 
+
+
 router.post('/login', async (req, res) => {
     const { username, password } = req.body
     const userAccount = username + "#account"
@@ -90,28 +92,45 @@ router.post('/login', async (req, res) => {
     }
     let comparePassword = false;
 
-    /*
-    Need to change this later to compare actual hashed password to current
     
+    // Need to change this later to compare actual hashed password to current
+    // testing user5 as username and hello as password
     if (userExists) {
         const result = await bcrypt.compare(password, encryptedPass); // not allowing me to compare string to string, need hash
-        res.send(encryptedPass);
-    }  
-        
-    */
-    if (userExists && password == encryptedPass) {
-        //res.send("Credentials are valid")
-        req.session.username = username;
-        if (!req.session) {
-            return res.status(500).send("Session isn't initialized");
+        if (result) {
+            req.session.username = username
+            return res.send("User successfully logged in");            
         }
-        res.send("Set credentials")
+        return res.send("User credentials invalid");
+
+    }  
+    return res.send("user doesn't exist")
+        
+    /*
+    if (userExists && password == encryptedPass) {
+        req.session.username = username;
+        return res.send(req.session)
     }
     else {
         return res.send("Invalid credentials");
-    }
+    }*/
 
 });
+
+
+//logout fully works
+router.post('/logout', async (req, res) => {
+    if (!req.session.username) {
+        return res.status(400).send("User needs to login");
+    }
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send("Problem destroying session" + error);
+        }
+        return res.send("Logout successful");
+    })
+});
+
 
 /*
 router.post('/login', async (req, res) => {

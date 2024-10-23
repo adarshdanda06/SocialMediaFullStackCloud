@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { DynamoDBClient, QueryCommand, GetItemCommand } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient, QueryCommand, GetItemCommand, PutItemCommand, DeleteItemCommand } = require("@aws-sdk/client-dynamodb");
 const { awsConfig } = require('../config');
 
 
@@ -52,6 +52,7 @@ router.post('/createPost', async (req, res) => {
   const username = req.session.username;
   const { postBio, postImg } = req.body
   const timeUploaded = Math.floor(Date.now() / 1000);
+  const timStr = timeUploaded.toString()
   const params = {
     TableName: dynamoTableName,
     Item: {
@@ -59,7 +60,7 @@ router.post('/createPost', async (req, res) => {
         S: username + "#posts"
       },
       SK: {
-        S: "post#time:" + timeUploaded
+        S: "post#time:" + timStr
       },
       content: {
         S: postBio
@@ -68,12 +69,50 @@ router.post('/createPost', async (req, res) => {
         S: postImg
       },
       timeUploaded: {
-        N: timeUploaded
+        N: timeUploaded.toString()
       }
     }
   };
-  res.send(params);
+  await ddbClient.send(new PutItemCommand(params)).then((result) => {
+    return res.send("Successfully created post");
+  }).catch(error => {
+    return res.status(500).send(error);
+  });
 });
 
+router.post('/removePost', async (req, res) => {
+  if (!req.session.username) {
+    return res.status(403).send("Need to login before deleting post");
+  }
+  const { postTimeSK } = req.body
+  const username = req.session.username;
+  const params = {
+    TableName: dynamoTableName,
+    Key: {
+      PK: {
+        S: username + "#posts"
+      },
+      SK: {
+        S: postTimeSK
+      }
+    }
+  }
+  let postExists = false
+  try {
+    await ddbClient.send(new GetItemCommand(params)).then((result) => {
+      if (result.Item) postExists = true;
+      else return res.status(403).send("Post doesn't exist");
+    }).catch(error => {
+      return res.status(500).send(error);
+    })
+  } catch {}
+  if (postExists) {
+    await ddbClient.send(new DeleteItemCommand(params)).then((result) => {
+      return res.send("Post successfully deleted");
+    }).catch(error => {
+      return res.status(500).send("Some internal error occured");
+    });
+  }
+});
 
 module.exports = router;

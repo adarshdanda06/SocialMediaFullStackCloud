@@ -9,12 +9,7 @@ const jwt = require('jsonwebtoken');
 const ddbClient = new DynamoDBClient(awsConfig);
 const dynamoTableName = 'Social';
 
-// next -- > 
-// 1. create postgre table: Users: cols --> users, passwords (hashed) --> adding to social table instead
-// check below for user auth and protected routes
-// 2. https://medium.com/@maison.moa/using-jwt-json-web-tokens-to-authorize-users-and-protect-api-routes-3e04a1453c3e
 
-//register fully works
 router.post('/register', async (req, res) => {
     const { username, password } = req.body
     const userAccount = username + "#account"
@@ -63,8 +58,13 @@ router.post('/register', async (req, res) => {
   });
 
 
-
+//user 5 hello
+//user 7 byebye
+// above are test accounts
 router.post('/login', async (req, res) => {
+    if (req.session.username) {
+        return res.send(`${req.session.username} already logged in`);
+    }
     const { username, password } = req.body
     const userAccount = username + "#account"
     const params = {
@@ -93,8 +93,6 @@ router.post('/login', async (req, res) => {
     let comparePassword = false;
 
     
-    // Need to change this later to compare actual hashed password to current
-    // testing user5 as username and hello as password
     if (userExists) {
         const result = await bcrypt.compare(password, encryptedPass); // not allowing me to compare string to string, need hash
         if (result) {
@@ -105,16 +103,6 @@ router.post('/login', async (req, res) => {
 
     }  
     return res.send("user doesn't exist")
-        
-    /*
-    if (userExists && password == encryptedPass) {
-        req.session.username = username;
-        return res.send(req.session)
-    }
-    else {
-        return res.send("Invalid credentials");
-    }*/
-
 });
 
 
@@ -123,59 +111,14 @@ router.post('/logout', async (req, res) => {
     if (!req.session.username) {
         return res.status(400).send("User needs to login");
     }
+    const username = req.session.username;
     req.session.destroy((err) => {
         if (err) {
             return res.status(500).send("Problem destroying session" + error);
         }
-        return res.send("Logout successful");
+        return res.send(`Logged ${username} out successfully`);
     })
 });
-
-
-/*
-router.post('/login', async (req, res) => {
-    const { username, passowrd } = req.body
-    const userAccount = username + "account"
-    const userObj = {
-        "username": username
-    }
-
-    const params = {
-        TableName: dynamoTableName,
-        Key: {
-            PK: {
-                S: userAccount
-            },
-            SK: {
-                S: "authentication"
-            }
-        }
-    };
-    await ddbClient.send(new GetItemCommand(params)).then(result => {
-        res.send(result)
-    }).catch(error => {
-        res.status(500).send("hello")
-    })
-
-    
-    let userExists = false;
-    await ddbClient.send(new GetItemCommand(params)).then(result => {
-        userExists = true;
-        res.send(result)
-    }).catch(error => {
-        return res.send("user doesn't exist, make sure to create user");
-    }) // checking if user exists *
-    /*let hashedPassword;
-    await ddbClient.send(new )
-
-
-    if (userExists ) {
-
-    } else {
-        
-    } 
-
-});*/
 
 
 module.exports = router;

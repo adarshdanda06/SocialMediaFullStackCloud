@@ -94,7 +94,7 @@ router.post('/login', async (req, res) => {
 
     
     if (userExists) {
-        const result = await bcrypt.compare(password, encryptedPass); // not allowing me to compare string to string, need hash
+        const result = await bcrypt.compare(password, encryptedPass);
         if (result) {
             req.session.username = username
             return res.send("User successfully logged in");            

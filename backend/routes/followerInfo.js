@@ -20,13 +20,13 @@ router.get('/:userID/following', async (req, res) => {
     };
     await ddbClient.send(new QueryCommand(params)).then(result => {
         res.send(result.Items)
-      }).catch(error => {
+    }).catch(error => {
         res.status(500).send(error)
-      })
-  });
+    });
+});
   
 
-  router.get('/:userID/followers', async (req, res) => {
+router.get('/:userID/followers', async (req, res) => {
     const params = {
         TableName: dynamoTableName,
         ExpressionAttributeValues: {
@@ -39,9 +39,11 @@ router.get('/:userID/following', async (req, res) => {
     };
     await ddbClient.send(new QueryCommand(params)).then(result => {
         res.send(result.Items)
-      }).catch(error => {
+    }).catch(error => {
         res.status(500).send(error)
-      })
-  });
+    });
+});
+
+
 
 module.exports = router;

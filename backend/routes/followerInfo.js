@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { DynamoDBClient, QueryCommand } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient, QueryCommand, TransactWriteItemsCommand, PutItemCommand } = require("@aws-sdk/client-dynamodb");
 const { awsConfig } = require('../config');
 
 
@@ -44,6 +44,52 @@ router.get('/:userID/followers', async (req, res) => {
     });
 });
 
+
+router.post('/user/follow', async (req, res) => {
+    if (!req.session.username) {
+        return res.status(403).send("User must be logged in to follow");
+    }
+    const username = req.session.username;
+    const { followThem } = req.body;
+
+    const params = {
+        TransactItems: [
+            {
+                Put: {
+                    TableName: dynamoTableName,
+                    Item: {
+                        PK: {
+                            S: username + "#following"
+                        },
+                        SK: {
+                            S: followThem
+                        }
+                    }
+                }
+            }, 
+            {
+                Put: {
+                    TableName: dynamoTableName,
+                    Item: {
+                        PK: {
+                            S: followThem + "#followers"
+                        },
+                        SK: {
+                            S: username
+                        }
+                    }
+                }
+            }
+        ]
+    };
+    //return res.send(params);
+
+    await ddbClient.send(new TransactWriteItemsCommand(params)).then((result) => {
+        return res.send(`Succesfully followed ${followThem}`);
+    }).catch(error => {
+        return res.send(error);
+    });
+});
 
 
 module.exports = router;

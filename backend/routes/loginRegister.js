@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const router = express.Router();
 const { awsConfig } = require('../config');
-const { DynamoDBClient, GetItemCommand, PutItemCommand } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBClient, GetItemCommand, PutItemCommand, TransactWriteItemsCommand } = require('@aws-sdk/client-dynamodb');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -10,6 +10,8 @@ const ddbClient = new DynamoDBClient(awsConfig);
 const dynamoTableName = 'Social';
 
 
+// after this, user should be redirected to create profile page thru frontend
+// create profile should include the bio and name and optional profile pic
 router.post('/register', async (req, res) => {
     const { username, password } = req.body
     const userAccount = username + "#account"
@@ -29,22 +31,47 @@ router.post('/register', async (req, res) => {
         if (!result.Item) {
             const encryptedPass = await bcrypt.hash(password, 10);
             const addUserParams = {
-                TableName: dynamoTableName,
-                Item: {
-                    PK: {
-                        S: userAccount
+                TransactItems: [
+                    {
+                        Put: {
+                            TableName: dynamoTableName,
+                            Item: {
+                                PK: {
+                                    S: userAccount
+                                },
+                                SK: {
+                                    S: "authentication"
+                                },
+                                password: {
+                                    S: encryptedPass
+                                }
+                            }
+                        }
                     },
-                    SK: {
-                        S: "authentication"
-                    },
-                    password: {
-                        S: encryptedPass
+                    {
+                        Put: {
+                            TableName: dynamoTableName,
+                            Item: {
+                                PK: {
+                                    S: username
+                                },
+                                SK: {
+                                    S: "count"
+                                },
+                                "follower#": {
+                                    N: "0"
+                                },
+                                "following#": {
+                                    N: "0"
+                                }
+                            }
+                        }
                     }
-                }
+                ]
             }
 
-            await ddbClient.send(new PutItemCommand(addUserParams)).then((result) => {
-                res.send("Successfully created user")
+            await ddbClient.send(new TransactWriteItemsCommand(addUserParams)).then((result) => {
+                return res.send("Successfully created user")
             }).catch(error => {
                 res.status(500).send(error)
             })
@@ -58,8 +85,8 @@ router.post('/register', async (req, res) => {
   });
 
 
-//user 5 hello
-//user 7 byebye
+// user 5 hello
+// user 7 byebye
 // above are test accounts
 router.post('/login', async (req, res) => {
     if (req.session.username) {

@@ -7,22 +7,38 @@ const { awsConfig } = require('../config');
 const ddbClient = new DynamoDBClient(awsConfig);
 const dynamoTableName = 'Social';
 
-router.get('/:userID/following', async (req, res) => {
+async function getFollowingList(req, res, userID) {
+    let followList = []
     const params = {
         TableName: dynamoTableName,
         ExpressionAttributeValues: {
             ":pk": {
-                S: req.params["userID"] + "#following"
+                S: userID + "#following"
             }
         },
         KeyConditionExpression: "PK = :pk",
         ProjectionExpression: "SK"
     };
-    await ddbClient.send(new QueryCommand(params)).then(result => {
-        res.send(result.Items)
+    result = await ddbClient.send(new QueryCommand(params)).then(result => {
+        const listOfUsers = result.Items;
+        for (let i = 0; i < listOfUsers.length; i++) {
+            followList.push(listOfUsers[i]["SK"]["S"]);
+        }
+        return followList;
     }).catch(error => {
-        res.status(500).send(error)
+        throw error;
     });
+    return result;
+}
+
+router.get('/:userID/following', async (req, res) => {
+    try {
+        const result = await getFollowingList(req, res, req.params["userID"]);
+        res.send(result);
+    }
+    catch (error) {
+        res.status(500).send("Some error occured:" + error);
+    }
 });
   
 
@@ -52,11 +68,16 @@ router.post('/user/follow', async (req, res) => {
     const username = req.session.username;
     const { followingThisUser } = req.body;
     // may need to add a can't follow again implmentation
-    const checkFollowing = {
-        TableName: dynamoTableName,
-
-    };
-
+    try {
+        const followingList = await getFollowingList(req, res, username);
+        const followingSet = new Set(followingList)
+        if (followingSet.has(followingThisUser)) {
+            return res.send("You already follow this user.")
+        }
+    }
+    catch (error) {
+        res.status(500).send("Some error occured:" + error);
+    }
 
     const params = {
         TransactItems: [

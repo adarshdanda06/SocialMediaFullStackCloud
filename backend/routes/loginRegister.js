@@ -66,6 +66,25 @@ router.post('/register', async (req, res) => {
                                 }
                             }
                         }
+                    },
+                    {
+                        Put: {
+                            TableName: dynamoTableName,
+                            Item: {
+                                PK: {
+                                    S: username
+                                },
+                                SK: {
+                                    S: "info"
+                                },
+                                "bio": {
+                                    S: ""
+                                },
+                                "profilePic": {
+                                    S: ""
+                                }
+                            }
+                        }
                     }
                 ]
             }
@@ -141,11 +160,24 @@ router.post('/logout', async (req, res) => {
     const username = req.session.username;
     req.session.destroy((err) => {
         if (err) {
-            return res.status(500).send("Problem destroying session" + error);
+            return res.status(500).send("Problem destroying session" + err);
         }
         return res.send(`Logged ${username} out successfully`);
     })
 });
 
+
+router.post('/createProfile', async (req, res) => {
+    if (!req.session.username) {
+        return res.status(403).send("User needs to login");
+    }
+    const username = req.session.username;
+    const { bio } = req.body;
+    let { profileImg } = req.body;
+    if (profileImg == "") {
+        profileImg = "default s3 profile pic";
+    }
+    
+});
 
 module.exports = router;

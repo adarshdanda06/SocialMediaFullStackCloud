@@ -22,7 +22,7 @@ app.use(session({
 app.use('/postInfo', postRoutes);
 app.use('/followingInfo', followingRoutes);
 app.use('/users', userRoutes);
-app.use('/loginActions', loginRegisterRoutes)
+app.use('/loginActions', loginRegisterRoutes);
 
 
 

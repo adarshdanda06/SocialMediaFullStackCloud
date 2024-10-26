@@ -187,15 +187,19 @@ router.post('/createProfile', async (req, res) => {
                 S: "info"
             }
         },
-        UpdateExpression: "SET #attr = :val, #attr1 = :val1",
         ExpressionAttributeNames: {
             "#attr": "bio",
             "#attr1": "profilePic"
         },
         ExpressionAttributeValues: {
-            ":val": bio,
-            ":val1": profileImg
-        }
+            ":val": {
+                S: bio
+            },
+            ":val1": {
+                S: profileImg
+            }
+        },
+        UpdateExpression: "SET #attr = :val, #attr1 = :val1"
     };
     await ddbClient.send(new UpdateItemCommand(params)).then(result => {
         return res.send("Sucessfully updated bio and profilePic")

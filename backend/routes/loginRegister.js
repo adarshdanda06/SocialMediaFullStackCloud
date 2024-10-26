@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const router = express.Router();
 const { awsConfig } = require('../config');
-const { DynamoDBClient, GetItemCommand, PutItemCommand, TransactWriteItemsCommand } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBClient, GetItemCommand, PutItemCommand, TransactWriteItemsCommand, UpdateItemCommand } = require('@aws-sdk/client-dynamodb');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -177,7 +177,32 @@ router.post('/createProfile', async (req, res) => {
     if (profileImg == "") {
         profileImg = "default s3 profile pic";
     }
-    
+    const params = {
+        TableName: dynamoTableName,
+        Key: {
+            PK: {
+                S: username
+            },
+            SK: {
+                S: "info"
+            }
+        },
+        UpdateExpression: "SET #attr = :val, #attr1 = :val1",
+        ExpressionAttributeNames: {
+            "#attr": "bio",
+            "#attr1": "profilePic"
+        },
+        ExpressionAttributeValues: {
+            ":val": bio,
+            ":val1": profileImg
+        }
+    };
+    await ddbClient.send(new UpdateItemCommand(params)).then(result => {
+        return res.send("Sucessfully updated bio and profilePic")
+    }).catch(err => {
+        return res.send("Error occured while updating: " + err);
+    });
+
 });
 
 module.exports = router;

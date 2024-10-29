@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Navbar from './components/Navbar';
+import Login from './components/Login';
+import AddPost from './components/AddPost';
+import Followers from './components/Followers';
+import Following from './components/Following';
 
 function App() {
+  const [activeComponent, setActiveComponent] = useState('login');
+
+  const renderComponent = () => {
+    switch (activeComponent) {
+      case 'login':
+        return <Login />;
+      case 'addPost':
+        return <AddPost />;
+      case 'followers':
+        return <Followers />;
+      case 'following':
+        return <Following />;
+
+      default:
+        return <Login />;
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="min-h-screen bg-gray-100">
+      <Navbar setActiveComponent={setActiveComponent} />
+      <div className="p-4">{renderComponent()}</div>
     </div>
   );
 }

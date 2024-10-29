@@ -206,7 +206,6 @@ router.post('/createProfile', async (req, res) => {
     }).catch(err => {
         return res.send("Error occured while updating: " + err);
     });
-
 });
 
 module.exports = router;

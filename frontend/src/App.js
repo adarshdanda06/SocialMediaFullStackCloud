@@ -1,16 +1,11 @@
-import React from 'react';
-import LandingPage from './pages/LandingPage';
-import Dashboard from './components/Dashboard';
-import { Routes, Route } from 'react-router-dom';
-//import LoginPage from './pages/LoginPage';
+import './App.css';
 
 function App() {
-
-  return (<div>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-      </Routes>
-    </div>); 
+  return (
+    <div className="App">
+      <h1>Hello my name is</h1>
+    </div>
+  );
 }
 
 export default App;

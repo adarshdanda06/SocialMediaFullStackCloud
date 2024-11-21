@@ -2,6 +2,9 @@ import React from 'react';
 import { FaMapMarkerAlt, FaUserFriends, FaHeart, FaImage } from 'react-icons/fa';
 import PostsDashboard from '../components/PostDashboard';
 import { useState } from 'react';
+import FollowersDashboard from '../components/FollowersDashboard';
+import FollowingDashboard from '../components/FollowingDashboard';
+
 
 function ProfilePage() {
     const [isPostsOpen, setIsPostsOpen] = useState(false);
@@ -77,8 +80,14 @@ function ProfilePage() {
                 isOpen={isPostsOpen}
                 onClose={() => setIsPostsOpen(false)}
             />
-          <button className="text-gray-400 hover:text-white transition-colors text-sm">Following</button>
-          <button className="text-gray-400 hover:text-white transition-colors text-sm">Followers</button>
+          <button className="text-gray-400 hover:text-white transition-colors text-sm" onClick={() => setIsFollowersOpen(true)}>Followers</button>
+          <FollowersDashboard
+            isOpen={isFollowersOpen}
+            onClose={() => setIsFollowersOpen(false)} />
+          <button className="text-gray-400 hover:text-white transition-colors text-sm" onClick={() => setIsFollowingOpen(true)}>Following</button>
+          <FollowingDashboard
+            isOpen={isFollowingOpen}
+            onClose={() => setIsFollowingOpen(false)} />
         </div>
       </div>
     </div>

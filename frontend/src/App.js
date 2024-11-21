@@ -5,12 +5,13 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import Nav from './components/Nav';
-import WelcomeHome from './components/WelcomeHome';
 import HomePage from './pages/HomePage';
+import ProfilePage from './pages/ProfilePage';
+import PostsDashboard from './components/PostDashboard';
+
 
 function App() {
-  return (<HomePage />)
+  return (<ProfilePage />)
 }
 
 export default App;

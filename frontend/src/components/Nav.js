@@ -1,7 +1,7 @@
 import React from "react";
 
 function Nav() {
-    const headers = ['Home', 'Explore', 'Post', 'Profile'];
+    const headers = ['Home', 'Explore', 'Post', 'Profile', 'Logout'];
     var link;
   
     return (

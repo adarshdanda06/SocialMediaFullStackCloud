@@ -4,7 +4,7 @@ const router = express.Router();
 const { awsConfig } = require('../config');
 const { DynamoDBClient, GetItemCommand, PutItemCommand, TransactWriteItemsCommand, UpdateItemCommand } = require('@aws-sdk/client-dynamodb');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const e = require('express');
 
 const ddbClient = new DynamoDBClient(awsConfig);
 const dynamoTableName = 'Social';
@@ -103,6 +103,14 @@ router.post('/register', async (req, res) => {
     }
   });
 
+router.get('/getUsername', (req, res) => {
+    console.log(req.session.username)
+    if (req.session.username) {
+        return res.send(req.session.username);
+    } else {
+        return res.status(401).send('Not authenticated');
+    }
+});
 
 // user 5 hello
 // user 7 byebye
@@ -143,12 +151,21 @@ router.post('/login', async (req, res) => {
         const result = await bcrypt.compare(password, encryptedPass);
         if (result) {
             req.session.username = username
-            return res.send("User successfully logged in");            
+            return res.send({
+                "userStatus": true,
+                "userExists": true
+            });            
         }
-        return res.send("User credentials invalid");
+        return res.send({
+            "userStatus": false,
+            "userExists": true
+        });
 
     }  
-    return res.send("user doesn't exist")
+    return res.send({
+        "userStatus": false,
+        "userExists": false
+    })
 });
 
 

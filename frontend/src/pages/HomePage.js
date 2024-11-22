@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import WelcomeHome from '../components/WelcomeHome';
 import LoginRegister from '../components/LoginRegister';
+const path = "http://localhost:8000";
+
 
 function HomePage() {
   const [isStarted, setIsStarted] = useState(false);

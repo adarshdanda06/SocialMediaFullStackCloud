@@ -1,11 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { FaUser, FaEnvelope, FaLock, FaGoogle, FaGithub } from 'react-icons/fa';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../UserContext';
+
+const path = "http://localhost:8000";
+
 
 function LoginRegister(){
   const [isLogin, setIsLogin] = useState(true);
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [userLoggedIn, setUserLoggedIn] = useState("");
+  const navigate = useNavigate();
+  const { setUser, user } = useContext(UserContext);
+  const api = axios.create({
+    baseURL: path, 
+    withCredentials: true
+  });
   const toggleForm = () => {
     setIsLogin(!isLogin);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      var response;
+      if (isLogin) {
+        response = await api.post(`/loginActions/login`, {
+          username,
+          password
+        });
+        alert("Check this")
+      } else {
+        response = await api.post(`/loginActions/register`, {
+          username,
+          password
+        });
+      }
+      if (response && isLogin) {
+        const data = response.data;
+        if (data.userExists && data.userStatus) {
+          setUser(username);
+          navigate('/profile');
+        } else {
+          alert("Invalid credentials")
+        }
+      }
+      if (response && !isLogin) {
+        const data = response.data
+        // navigate('/createProfile');
+      }
+    } catch (error) {
+      console.error('Login failed:', error.response.data);
+    }
   };
 
   return (
@@ -13,7 +61,8 @@ function LoginRegister(){
       <h2 className="text-3xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
         {isLogin ? 'Welcome Back' : 'Create Account'}
       </h2>
-      <form className="space-y-4">
+      <form className="space-y-4"
+        onSubmit={handleSubmit}>
 
         <div className="relative">
           <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
@@ -21,24 +70,16 @@ function LoginRegister(){
             type="text"
             placeholder="Username"
             className="w-full p-2 pl-10 bg-gray-700 bg-opacity-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300"
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-        {!isLogin && (
-          <div className="relative">
-            <FaUser className="absolute top-3 left-3 text-gray-400" />
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full p-2 pl-10 bg-gray-700 bg-opacity-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300"
-            />
-          </div>
-        )}
         <div className="relative">
           <FaLock className="absolute top-3 left-3 text-gray-400" />
           <input
             type="password"
             placeholder="Password"
             className="w-full p-2 pl-10 bg-gray-700 bg-opacity-50 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-300"
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <button

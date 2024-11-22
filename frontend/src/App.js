@@ -4,25 +4,31 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  BrowserRouter,
 } from "react-router-dom";
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
-import PostsDashboard from './components/PostDashboard';
 import UserProfilePage from './pages/UserProfilePage';
 import CreatePostPage from './pages/CreatePostPage';
 import CreateProfilePage from './pages/CreateProfilePage';
+import ExplorePage from './pages/ExplorePage';
+import { UserProvider } from './UserContext';
+
 
 function App() {
+
   return (<Router>
+    <UserProvider>
     <Routes>
       <Route path='/' element={<HomePage />} />
-      <Route path='/createPost' element={<CreatePostPage />} />
-      <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/createPost' element={<CreatePostPage />} />
+        <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/explore' element={<ExplorePage />} />
+        <Route path='/otherUser' element={<UserProfilePage />} />
+        <Route path='/createProfile' element={<CreateProfilePage />} />
     </Routes>
-  </Router>
-  
-)
+    </ UserProvider>
+
+  </Router>);
 }
 
 export default App;

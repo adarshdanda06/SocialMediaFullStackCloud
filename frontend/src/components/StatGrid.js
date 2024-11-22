@@ -1,6 +1,11 @@
 import React from "react";
+import { UserContext } from "../UserContext";
+import { useContext } from "react";
+
 
 function StatGrid() {
+  const { user } = useContext(UserContext);
+
     return (<div className="grid grid-cols-2 gap-6">
         <div className="relative flex justify-between items-center py-28">
           <div className="absolute left-1/2 transform -translate-x-1/2">
@@ -11,7 +16,7 @@ function StatGrid() {
                 alt="Large profile"
               />
               <div className="absolute w-44 -bottom-2 left-1/2 transform -translate-x-1/2 bg-[#2a2a2a] px-4 py-1 rounded-full shadow-lg">
-                <span className="text-sm text-gray-300 text-center block">Name</span>
+                <span className="text-sm text-gray-300 text-center block">{user}</span>
               </div>
             </div>
           </div>

@@ -5,7 +5,9 @@ function NavBar() {
     return(
         <nav className="flex justify-between items-center">
         <div className="flex space-x-8">
-          <button className="text-gray-400 hover:text-white transition-colors text-sm">Explore</button>
+          <Link to="/explore">
+            <button className="text-gray-400 hover:text-white transition-colors text-sm">Explore</button>
+          </Link>
           <Link to="/createPost">
             <button className="text-gray-400 hover:text-white transition-colors text-sm">Create Post</button>
           </Link>

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { FaUpload } from 'react-icons/fa';
+import { UserContext } from '../UserContext';
+
 
 function CreateProfilePage() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const username = "ExampleUsername"; // You can make this dynamic
-
+  const { user } = useContext(UserContext);
+  const username = "";
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (file && file.type.includes('image')) {
@@ -17,12 +19,11 @@ function CreateProfilePage() {
       <div className="w-full max-w-5xl bg-[#212121] rounded-[2rem] shadow-2xl p-8">
         <div className="flex gap-12">
           {/* Left Column - Welcome and Create Profile Text */}
-          <div className="flex-1 flex flex-col justify-start">
+          <div className="flex-1 flex flex-col justify-start mt-10">
             <h2 className="text-4xl font-bold text-gray-200 mt-10">Welcome,</h2>
             <h3 className="text-3xl text-gray-400 mb-12">{username}</h3>
-            <div className="text-6xl font-bold text-gray-200 leading-tight ml-10">
-              <h1>Create</h1>
-              <h1>Profile</h1>
+            <div className="text-6xl font-bold text-gray-200 leading-tight">
+              <h1>Create Profile</h1>
             </div>
           </div>
 

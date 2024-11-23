@@ -54,7 +54,11 @@ router.get('/:userID/followers', async (req, res) => {
         ProjectionExpression: "SK"
     };
     await ddbClient.send(new QueryCommand(params)).then(result => {
-        return res.send(result.Items)
+        var users = []
+        for (let i = 0; i < result.Items.length; i++) {
+            users.push(result.Items[i]["SK"]["S"])
+        }
+        return res.send(users)
     }).catch(error => {
         return res.status(500).send(error)
     });

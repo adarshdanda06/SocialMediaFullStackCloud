@@ -23,8 +23,8 @@ function App() {
         <Route path='/createPost' element={<CreatePostPage />} />
         <Route path='/profile' element={<ProfilePage />} />
         <Route path='/explore' element={<ExplorePage />} />
-        <Route path='/otherUser' element={<UserProfilePage />} />
         <Route path='/createProfile' element={<CreateProfilePage />} />
+        <Route path='/userProfile/:name' element={<UserProfilePage />} />
     </Routes>
     </ UserProvider>
 

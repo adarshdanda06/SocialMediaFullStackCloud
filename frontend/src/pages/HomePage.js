@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
 import WelcomeHome from '../components/WelcomeHome';
 import LoginRegister from '../components/LoginRegister';
+import { UserContext } from "../UserContext";
+import { useContext } from "react";
+import { Navigate } from 'react-router-dom';
+
 const path = "http://localhost:8000";
+
 
 
 function HomePage() {
   const [isStarted, setIsStarted] = useState(false);
+  const { user } = useContext(UserContext);
+
+
 
   const handleGetStarted = () => {
     setIsStarted(true);
   };
 
   return (
+    <>
+    { (user == null) ? (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gray-900 text-white">
       <div className="absolute inset-0 bg-gradient-radial from-gray-800 via-gray-900 to-black opacity-50 animate-pulse"></div>
       <div className={`z-10 flex ${isStarted ? 'justify-between max-w-5xl px-20' : 'justify-center'}`}>
@@ -33,7 +43,9 @@ function HomePage() {
           </div>
         )}
       </div>
-    </div>
+    </div>) :  
+    <Navigate to='profile' />}
+    </>
   );
 };
 

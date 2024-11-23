@@ -8,16 +8,15 @@ function ExplorePage() {
       { id: 1, username: "User1", imageUrl: "/path-to-image-1.jpg" },
       { id: 2, username: "User2", imageUrl: "/path-to-image-2.jpg" },
     ];
-  
+    
+
     return (
       <div className="min-h-screen w-full bg-[#1a1a1a] p-8">
         <div className="w-full bg-[#212121] rounded-[2rem] shadow-2xl p-8">
-          {/* Navigation Bar */}
           <div className="mb-8">
             <NavBar />
           </div>
   
-          {/* Search Bar */}
           <div className="relative mb-8 max-w-3xl mx-auto">
             <input 
               type="text"

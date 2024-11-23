@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { DynamoDBClient, GetItemCommand } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient, GetItemCommand, ScanCommand } = require("@aws-sdk/client-dynamodb");
 const { awsConfig } = require('../config');
 
 
@@ -24,10 +24,43 @@ router.get('/:userID/count', async (req, res) => {
     }
   };
   await ddbClient.send(new GetItemCommand(params)).then(result => {
-      res.send(result.Item)
+    var items = {
+      "followers": result.Item["follower#"]["N"] ?? '0',
+      "following": result.Item["following#"]["N"] ?? '0',
+      "posts": result.Item["post#"]["N"] ?? '0'
+    }
+    res.send(items)
     }).catch(error => {
       res.status(500).send(error)
     })
+});
+
+router.get('/:userID/getOtherUsers', async (req, res) => {
+  let users = new Set();
+
+  const scanParams = {
+    TableName: dynamoTableName,
+    ProjectionExpression: "PK",
+  }
+
+  const command = new ScanCommand(scanParams);
+  await ddbClient.send(command).then(result => {
+    for (let i = 0; i < result.Items.length; i++) {
+      if (!(result.Items[i]["PK"]["S"]).includes("#")) {
+        users.add(result.Items[i]["PK"]["S"])
+      }
+    }
+    if (users.has(req.params["userID"])) {
+      users.delete(req.params["userID"])
+    }
+    const myUsers = Array.from(users);
+    res.send(myUsers);
+  }).catch(error => {
+    res.status(400).send("error" + error)
+  })
+
+  // Collect partition key value
+
 });
 
 router.get('/:userID/info', async (req, res) => {

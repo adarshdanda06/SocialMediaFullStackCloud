@@ -15,7 +15,7 @@ function LoginRegister(){
   const navigate = useNavigate();
   const { setUser, user } = useContext(UserContext);
   const api = axios.create({
-    baseURL: path, 
+    baseURL: "http://localhost:8000", 
     withCredentials: true
   });
   const toggleForm = () => {
@@ -31,7 +31,6 @@ function LoginRegister(){
           username,
           password
         });
-        alert("Check this")
       } else {
         response = await api.post(`/loginActions/register`, {
           username,
@@ -44,12 +43,17 @@ function LoginRegister(){
           setUser(username);
           navigate('/profile');
         } else {
-          alert("Invalid credentials")
+          alert("Invalid credentials");
         }
       }
       if (response && !isLogin) {
         const data = response.data
-        // navigate('/createProfile');
+        if (data.userCreated) {
+          setUser(username);
+          navigate('/createProfile');
+        } else {
+          alert("Invalid credentials");
+        }
       }
     } catch (error) {
       console.error('Login failed:', error.response.data);

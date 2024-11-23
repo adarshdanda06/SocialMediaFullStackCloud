@@ -1,22 +1,41 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import PostItem from "./PostItem";
 import UserInFollow from "./UserInFollow";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
-function FollowersDashboard({ isOpen, onClose }) {
-    // Example posts data
-    const users = [
-        { id: 1, imageUrl: '/path-to-image-1.jpg' },
-        { id: 2, imageUrl: '/path-to-image-2.jpg' },
-        { id: 3, imageUrl: '/path-to-image-3.jpg' },
-        { id: 4, imageUrl: '/path-to-image-3.jpg' },
-        { id: 5, imageUrl: '/path-to-image-3.jpg' },
-        { id: 6, imageUrl: '/path-to-image-3.jpg' },
-        { id: 7, imageUrl: '/path-to-image-3.jpg' },
-        { id: 8, imageUrl: '/path-to-image-3.jpg' },
-        { id: 9, imageUrl: '/path-to-image-3.jpg' },
-  
-        // Add more posts as needed
-      ];
+
+async function userList(api, user) {
+  try {
+    const response = await api.get(`/followingInfo/${user}/followers`);
+    return response.data.map((name, index) => ({ id: index, name: name }));
+  } catch (error) {
+    console.error('Failed', error.response?.data || error.message);
+    return [];
+  }
+}
+
+function FollowersDashboard({ user, isOpen, onClose }) {
+  const [users, setUsers] = useState([]);
+  const api = axios.create({
+    baseURL: "http://localhost:8000", 
+    withCredentials: true
+  });
+
+    useEffect(() => {
+      async function fetchUsers() {
+        if (isOpen && user) {
+          const fetchedUsers = await userList(api, user);
+          setUsers(fetchedUsers);
+        }
+      }
+      fetchUsers();
+    }, [isOpen, user]);
+
+    useEffect(() => {
+      console.log(users);
+    }, [users]);
     
       if (!isOpen) return null;
     
@@ -37,12 +56,14 @@ function FollowersDashboard({ isOpen, onClose }) {
             {/* Posts Grid */}
             <div className="overflow-y-auto h-[calc(100%-4rem)]">
               <div className="grid grid-cols-1 gap-4">
-                  {users.map(user => (
-                  <UserInFollow 
-                      key={user.id} 
-                      imageUrl={user.imageUrl}
-                  />
-                  ))}
+                {users.map(user => (
+                <Link 
+                  key={user.id}
+                  to={`/userProfile/${user.name}`}
+                >
+                  <UserInFollow name={user.name} />
+                </Link>
+              ))}
               </div>
           </div>
           </div>

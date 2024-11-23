@@ -63,6 +63,9 @@ router.post('/register', async (req, res) => {
                                 },
                                 "following#": {
                                     N: "0"
+                                },
+                                "post#": {
+                                    N: "0"
                                 }
                             }
                         }
@@ -90,21 +93,20 @@ router.post('/register', async (req, res) => {
             }
 
             await ddbClient.send(new TransactWriteItemsCommand(addUserParams)).then((result) => {
-                return res.send("Successfully created user")
+                return res.send({"userCreated": true})
             }).catch(error => {
                 res.status(500).send(error)
             })
         } else {
-            res.send("User already exists")
+            res.send({"userCreated": false})
         }
 
     } catch (error) {
-        res.status(500).send("Getting item failed")
+        res.status(500).send({"userCreated": false, "error": error})
     }
   });
 
 router.get('/getUsername', (req, res) => {
-    console.log(req.session.username)
     if (req.session.username) {
         return res.send(req.session.username);
     } else {

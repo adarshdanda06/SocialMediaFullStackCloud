@@ -4,7 +4,7 @@ import PostsDashboard from "./PostDashboard";
 import FollowersDashboard from "./FollowersDashboard";
 import FollowingDashboard from "./FollowingDashboard";
 
-function BottomNavBar() {
+function BottomNavBar({ user }) {
     const [isPostsOpen, setIsPostsOpen] = useState(false);
     const [isFollowingOpen, setIsFollowingOpen] = useState(false);
     const [isFollowersOpen, setIsFollowersOpen] = useState(false);
@@ -19,10 +19,12 @@ function BottomNavBar() {
             />
           <button className="text-gray-400 hover:text-white transition-colors text-sm" onClick={() => setIsFollowersOpen(true)}>Followers</button>
           <FollowersDashboard
+            user={user}
             isOpen={isFollowersOpen}
             onClose={() => setIsFollowersOpen(false)} />
           <button className="text-gray-400 hover:text-white transition-colors text-sm" onClick={() => setIsFollowingOpen(true)}>Following</button>
           <FollowingDashboard
+            user={user}
             isOpen={isFollowingOpen}
             onClose={() => setIsFollowingOpen(false)} />
         </div>

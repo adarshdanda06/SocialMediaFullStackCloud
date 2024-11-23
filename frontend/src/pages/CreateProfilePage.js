@@ -27,7 +27,6 @@ function CreateProfilePage() {
             </div>
           </div>
 
-          {/* Right Column - Profile Picture & Bio */}
           <div className="flex-1 space-y-6">
             {/* Profile Picture Upload */}
             <div className="space-y-2">
@@ -61,7 +60,6 @@ function CreateProfilePage() {
               </div>
             </div>
 
-            {/* Bio Section */}
             <div className="space-y-2">
               <label className="text-gray-300">Bio</label>
               <textarea 
@@ -70,8 +68,7 @@ function CreateProfilePage() {
               />
             </div>
 
-            {/* Save Button */}
-            <button className="w-full bg-[#2a2a2a] text-white py-3 rounded-lg hover:bg-[#333333] transition-colors">
+]            <button className="w-full bg-[#2a2a2a] text-white py-3 rounded-lg hover:bg-[#333333] transition-colors">
               Save Profile
             </button>
           </div>

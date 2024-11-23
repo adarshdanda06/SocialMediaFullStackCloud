@@ -1,12 +1,17 @@
-import { useState } from 'react';
-import { FaUserFriends, FaMapMarkerAlt, FaEdit, FaSave } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaEdit, FaSave } from 'react-icons/fa';
 
 function EditableField({ label, icon, initialValue }) {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(initialValue || label);
 
+  useEffect(() => {
+    setValue(initialValue || label);
+  }, [initialValue, label]);
+
   const handleSave = () => {
     setIsEditing(false);
+    // Here you can add logic to save the value to your backend if needed
   };
 
   return (
@@ -36,6 +41,5 @@ function EditableField({ label, icon, initialValue }) {
     </div>
   );
 }
-
 
 export default EditableField;

@@ -1,13 +1,48 @@
 const express = require('express');
 const session = require('express-session');
 const router = express.Router();
-const { awsConfig } = require('../config');
+const { awsConfig, s3AwsConfig } = require('../config');
 const { DynamoDBClient, GetItemCommand, PutItemCommand, TransactWriteItemsCommand, UpdateItemCommand } = require('@aws-sdk/client-dynamodb');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { Upload } = require('@aws-sdk/lib-storage');
 const bcrypt = require('bcryptjs');
 const e = require('express');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+
+
+
+
 
 const ddbClient = new DynamoDBClient(awsConfig);
+const s3Client = new S3Client(s3AwsConfig);
 const dynamoTableName = 'Social';
+const s3BucketName = 'imgsandcontent';
+const upload = multer({
+    storage: multerS3({
+      s3: s3Client,
+      bucket: s3BucketName,
+      key: (req, file, cb) => {
+        const fileName = `profilePicture_${req.session.username}`;
+        cb(null, fileName);
+      }
+    })
+});
+
+
+router.post('/upload', upload.single('image'), (req, res) => {
+    if (!req.session.username) {
+        return res.status(401).send("Need to login");
+    }
+    if (!req.file) {
+      return res.status(400).send('No file uploaded');
+    }
+    
+    res.status(200).json({
+      message: 'File uploaded successfully',
+      fileUrl: req.file.location
+    });
+});
 
 
 // after this, user should be redirected to create profile page thru frontend
@@ -186,6 +221,10 @@ router.post('/logout', async (req, res) => {
 });
 
 
+
+
+
+
 router.post('/createProfile', async (req, res) => {
     if (!req.session.username) {
         return res.status(403).send("User needs to login");
@@ -195,7 +234,17 @@ router.post('/createProfile', async (req, res) => {
     let { profileImg } = req.body;
     if (profileImg == "") {
         profileImg = "default s3 profile pic";
+    } else {
+        const s3params = {
+            Bucket: s3BucketName,
+            Key: profileImg.name,
+            Body: file,
+            ContentType: file.type
+        }
+
     }
+
+
     const params = {
         TableName: dynamoTableName,
         Key: {

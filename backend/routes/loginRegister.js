@@ -29,6 +29,7 @@ const upload = multer({
     })
 });
 
+
 // need to implemet frontend for this
 router.post('/creatingProfile', upload.single('image'), async (req, res) => {
     if (!req.session.username) {
@@ -37,6 +38,7 @@ router.post('/creatingProfile', upload.single('image'), async (req, res) => {
     if (!req.file) {
       return res.status(400).send('No file uploaded');
     }
+    const { bio } = req.body
     const username = req.session.username
     const params = {
         TableName: dynamoTableName,
@@ -170,6 +172,7 @@ router.post('/register', async (req, res) => {
             }
 
             await ddbClient.send(new TransactWriteItemsCommand(addUserParams)).then((result) => {
+                req.session.username = username
                 return res.send({"userCreated": true})
             }).catch(error => {
                 res.status(500).send(error)

@@ -69,13 +69,13 @@ router.post('/creatingProfile', upload.single('image'), async (req, res) => {
 });
 
 // need to implement frontend for this
-router.get('/getProfilePic', async (req, res) => {
+router.get('/getProfilePic/:userID', async (req, res) => {
     if (!req.session.username) {
         return res.status(400).send("User must be logged in");
     }
     const getCommand = new GetObjectCommand({
         Bucket: 'imgsandcontent',
-        Key: `profilePicture_user76`,
+        Key: `profilePicture_${req.params['userID']}`,
     });
     try {
         const signedUrl = await getSignedUrl(s3Client, getCommand, {

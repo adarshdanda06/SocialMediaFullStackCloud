@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { FaUpload } from 'react-icons/fa';
 import { UserContext } from '../UserContext';
-
+import axios from 'axios';
 
 function CreateProfilePage() {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [bio, setBio] = useState(null);
   const { user } = useContext(UserContext);
   const username = "";
   const handleFileSelect = (e) => {
@@ -13,6 +14,35 @@ function CreateProfilePage() {
       setSelectedFile(file);
     }
   };
+  const api = axios.create({
+    baseURL: "http://localhost:8000", 
+    withCredentials: true
+  });
+  /*
+  const handleSubmit = async () => {
+    if (!selectedFile || !bio.trim()) {
+      alert('Please upload a profile picture and fill in your bio to register.');
+      return;
+    }
+    if (!user) {
+      alert("Invalid access");
+      return;
+    }
+    try {
+      const response = await api.post('loginActions/creatingProfile', {
+        "bio": bio,
+        "image": selectedFile
+      });
+
+    } catch (error) {
+      console.log("Error: " + error);
+    }
+
+    
+    
+    // Proceed with registration logic here
+    
+  };*/
 
   return (
     <div className="min-h-screen w-full bg-[#1a1a1a] p-8 flex justify-center items-center">
@@ -65,6 +95,7 @@ function CreateProfilePage() {
               <textarea 
                 className="w-full bg-[#333333] text-white p-3 rounded-lg h-32 resize-none focus:outline-none focus:ring-2 focus:ring-gray-500"
                 placeholder="Tell us about yourself..."
+                onChange={(e) => setBio(e.target.value)}
               />
             </div>
 

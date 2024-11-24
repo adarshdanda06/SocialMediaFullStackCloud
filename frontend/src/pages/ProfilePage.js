@@ -12,6 +12,7 @@ import axios from 'axios';
 function ProfilePage() {
   const { setUser, user } = useContext(UserContext);
   const [bio, setBio] = useState("empty");
+  const [profilePic, setProfilePic] = useState(null);
   const api = axios.create({
     baseURL: "http://localhost:8000", 
     withCredentials: true
@@ -32,13 +33,23 @@ function ProfilePage() {
     }
     fetchBio()
   }, [user]);
+  useEffect(() => {
+    async function fetchImg() {
+      if (user) {
+        const fetched = await api.get(`loginActions/getProfilePic/${user}`);
+        const data = await fetched.data
+        setProfilePic(data)
+      }
+    }
+    fetchImg()
+  }, [user]);
 
   return (
     <div className="min-h-screen w-full bg-[#1a1a1a] p-8">
       <div className="max-w-full mx-auto bg-[#212121] rounded-[2rem] shadow-2xl p-8 space-y-8">
         {/* Top Navigation */}
         <NavBar />
-        <StatGrid currentUser={user} />
+        <StatGrid currentUser={user} imgURL={profilePic} />
 
         <div className="grid grid-cols-1 gap-6">
       <EditableField 

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext";
 import axios from "axios";
 
-function StatGrid({ currentUser }) {
+function StatGrid({ currentUser, imgURL }) {
   const { user } = useContext(UserContext);
   const [stats, setStats] = useState({ followers: 0, following: 0, posts: 0 });
   const [loading, setLoading] = useState(true);
@@ -46,7 +46,7 @@ function StatGrid({ currentUser }) {
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <div className="relative">
             <img 
-              src="/path-to-large-profile.jpg" 
+              src={imgURL}
               className="w-40 h-40 rounded-full border-4 border-[#2a2a2a] shadow-xl"
               alt="Large profile"
             />

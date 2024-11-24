@@ -3,13 +3,13 @@ const session = require('express-session');
 const router = express.Router();
 const { awsConfig, s3AwsConfig } = require('../config');
 const { DynamoDBClient, GetItemCommand, PutItemCommand, TransactWriteItemsCommand, UpdateItemCommand } = require('@aws-sdk/client-dynamodb');
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { Upload } = require('@aws-sdk/lib-storage');
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const bcrypt = require('bcryptjs');
 const e = require('express');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
-
 
 
 
@@ -29,21 +29,63 @@ const upload = multer({
     })
 });
 
-
-router.post('/upload', upload.single('image'), (req, res) => {
+// need to implemet frontend for this
+router.post('/creatingProfile', upload.single('image'), async (req, res) => {
     if (!req.session.username) {
         return res.status(401).send("Need to login");
     }
     if (!req.file) {
       return res.status(400).send('No file uploaded');
     }
+    const username = req.session.username
+    const params = {
+        TableName: dynamoTableName,
+        Key: {
+            PK: {
+                S: username
+            },
+            SK: {
+                S: "info"
+            }
+        },
+        ExpressionAttributeNames: {
+            "#attr": "bio",
+        },
+        ExpressionAttributeValues: {
+            ":val": {
+                S: bio
+            },
+
+        },
+        UpdateExpression: "SET #attr = :val"
+    };
     
-    res.status(200).json({
-      message: 'File uploaded successfully',
-      fileUrl: req.file.location
-    });
+    try {
+        const response = await ddbClient.send(new UpdateItemCommand(params))
+        res.send("Successfully updated bio and uploaded profilePic")
+    } catch (error) {
+        res.send("Error occured while updating bio: " + err);
+    }
 });
 
+// need to implement frontend for this
+router.get('/getProfilePic', async (req, res) => {
+    if (!req.session.username) {
+        return res.status(400).send("User must be logged in");
+    }
+    const getCommand = new GetObjectCommand({
+        Bucket: 'imgsandcontent',
+        Key: `profilePicture_user76`,
+    });
+    try {
+        const signedUrl = await getSignedUrl(s3Client, getCommand, {
+            expiresIn: 900
+        })
+        res.send(signedUrl)
+    } catch (error) {
+        res.status(500).send("Some error: " + error)
+    }
+});
 
 // after this, user should be redirected to create profile page thru frontend
 // create profile should include the bio and name and optional profile pic

@@ -8,6 +8,8 @@ const multerS3 = require('multer-s3');
 const dynamoTableName = 'Social';
 const ddbClient = new DynamoDBClient(awsConfig);
 const s3Client = new S3Client(s3AwsConfig);
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+
 
 
 const s3BucketName = 'imgsandcontent';
@@ -66,11 +68,11 @@ const upload = multer({
     })
 });
 
-router.get('/getPostNum', async (req, res) => {
+router.get('/getPostNum/:user', async (req, res) => {
   if (!req.session.username) {
     return res.status(401).send("Need to login");
   }
-  const username = req.session.username;
+  const username = req.params["user"];
   const params = {
     TableName: dynamoTableName,
     Key: {
@@ -90,6 +92,26 @@ router.get('/getPostNum', async (req, res) => {
     res.send("Error: " + error);
   }
 });
+
+
+router.get('/getPost/:userID/:num', async (req, res) => {
+  if (!req.session.username) {
+      return res.status(400).send("User must be logged in");
+  }
+  const getCommand = new GetObjectCommand({
+      Bucket: 'imgsandcontent',
+      Key: `${req.params["userID"]}_post${req.params['num']}`
+  });
+  try {
+      const signedUrl = await getSignedUrl(s3Client, getCommand, {
+          expiresIn: 900
+      })
+      res.send(signedUrl)
+  } catch (error) {
+      res.status(500).send("Some error: " + error)
+  }
+});
+
 
 router.post('/creatingPost', upload.single('image'), async (req, res) => {
   if (!req.session.username) {

@@ -30,7 +30,6 @@ const upload = multer({
 });
 
 
-// need to implemet frontend for this
 router.post('/creatingProfile', upload.single('image'), async (req, res) => {
     if (!req.session.username) {
         return res.status(401).send("Need to login");
@@ -70,7 +69,7 @@ router.post('/creatingProfile', upload.single('image'), async (req, res) => {
     }
 });
 
-// need to implement frontend for this
+
 router.get('/getProfilePic/:userID', async (req, res) => {
     if (!req.session.username) {
         return res.status(400).send("User must be logged in");

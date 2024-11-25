@@ -14,6 +14,7 @@ function BottomNavBar({ user }) {
         <div className="flex justify-between items-center pt-6 border-t border-[#2a2a2a]">
           <button className="text-gray-400 hover:text-white transition-colors text-sm" onClick={() => setIsPostsOpen(true)}>Posts</button>
           <PostsDashboard 
+                viewUser={user}
                 isOpen={isPostsOpen}
                 onClose={() => setIsPostsOpen(false)}
             />

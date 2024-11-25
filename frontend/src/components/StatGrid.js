@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext";
 import axios from "axios";
+import url from "../serverURL";
+
 
 function StatGrid({ currentUser, imgURL, apiCheck }) {
   const { user } = useContext(UserContext);
@@ -8,7 +10,7 @@ function StatGrid({ currentUser, imgURL, apiCheck }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const api = axios.create({
-    baseURL: "http://localhost:8000", 
+    baseURL: url, 
     withCredentials: true
   });
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const router = express.Router();
-const { awsConfig, s3AwsConfig } = require('../config');
+const { awsConfig, s3AwsConfig, dynamoTableName } = require('../config');
 const { DynamoDBClient, GetItemCommand, PutItemCommand, TransactWriteItemsCommand, UpdateItemCommand } = require('@aws-sdk/client-dynamodb');
 const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { Upload } = require('@aws-sdk/lib-storage');
@@ -16,7 +16,6 @@ const multerS3 = require('multer-s3');
 
 const ddbClient = new DynamoDBClient(awsConfig);
 const s3Client = new S3Client(s3AwsConfig);
-const dynamoTableName = 'Social';
 const s3BucketName = 'imgsandcontent';
 const upload = multer({
     storage: multerS3({

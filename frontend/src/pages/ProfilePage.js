@@ -7,14 +7,14 @@ import BottomNavBar from '../components/BottomNavBar';
 import { useContext } from 'react';
 import { UserContext } from '../UserContext';
 import axios from 'axios';
-
+import url from '../serverURL';
 
 function ProfilePage() {
   const { setUser, user } = useContext(UserContext);
   const [bio, setBio] = useState("empty");
   const [profilePic, setProfilePic] = useState(null);
   const api = axios.create({
-    baseURL: "http://localhost:8000", 
+    baseURL: url, 
     withCredentials: true
   });
   useEffect(() => {

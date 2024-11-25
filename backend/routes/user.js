@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { DynamoDBClient, GetItemCommand, ScanCommand } = require("@aws-sdk/client-dynamodb");
-const { awsConfig } = require('../config');
+const { awsConfig, dynamoTableName } = require('../config');
 
 
 const ddbClient = new DynamoDBClient(awsConfig);
-const dynamoTableName = 'Social';
 
 router.get('/', (req, res) => {
   res.send("Hi");
@@ -58,8 +57,6 @@ router.get('/:userID/getOtherUsers', async (req, res) => {
   }).catch(error => {
     res.status(400).send("error" + error)
   })
-
-  // Collect partition key value
 
 });
 

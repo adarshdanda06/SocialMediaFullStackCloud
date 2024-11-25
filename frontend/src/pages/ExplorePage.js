@@ -5,13 +5,14 @@ import NavBar from "../components/NavBar";
 import axios from "axios";
 import { UserContext } from "../UserContext";
 import { useContext, useState, useEffect } from "react";
+import url from "../serverURL";
 
 function ExplorePage() {
   const { user } = useContext(UserContext);
   const [userList, setUserList] = useState([])
     
     const api = axios.create({
-      baseURL: "http://localhost:8000", 
+      baseURL: url, 
       withCredentials: true
     });
 

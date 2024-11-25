@@ -4,6 +4,7 @@ import { UserContext } from '../UserContext';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import url from '../serverURL';
 
 
 function CreateProfilePage() {
@@ -19,7 +20,7 @@ function CreateProfilePage() {
     }
   };
   const api = axios.create({
-    baseURL: "http://localhost:8000", 
+    baseURL: url, 
     withCredentials: true
   });
   

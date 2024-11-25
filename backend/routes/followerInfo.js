@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { DynamoDBClient, QueryCommand, TransactWriteItemsCommand, GetItemCommand, ReturnValue } = require("@aws-sdk/client-dynamodb");
-const { awsConfig } = require('../config');
+const { awsConfig, dynamoTableName } = require('../config');
 
 
 const ddbClient = new DynamoDBClient(awsConfig);
-const dynamoTableName = 'Social';
 
 async function getFollowingList(req, res, userID) {
     let followList = []

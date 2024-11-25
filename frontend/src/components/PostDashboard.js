@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import PostItem from "./PostItem";
 import axios from "axios";
-
+import url from "../serverURL";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000", 
+  baseURL: url, 
   withCredentials: true
 });
 
@@ -26,15 +26,8 @@ async function getPosts(viewUser) {
 
 
 function PostsDashboard({ isOpen, onClose, viewUser }) {
-    // Example posts data
     const [posts, setPosts] = useState([]);
-    /*
-    const posts = [
-      { id: 1, imageUrl: '/path-to-image-1.jpg' },
-      { id: 2, imageUrl: '/path-to-image-2.jpg' },
-      { id: 3, imageUrl: '/path-to-image-3.jpg' },
-      // Add more posts as needed
-    ];*/
+
     useEffect(() => {
       async function fetchPosts() {
         const fetchedPosts = await getPosts(viewUser);

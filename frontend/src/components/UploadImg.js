@@ -3,12 +3,14 @@ import { FaUpload, FaCheckCircle } from "react-icons/fa";
 import NavBar from "./NavBar";
 import Popup from "./Popup";
 import axios from "axios";
+import url from "../serverURL";
+
 
 function UploadImg({ popupText, types, message }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const api = axios.create({
-    baseURL: "http://localhost:8000",
+    baseURL: url,
     withCredentials: true
   });
 

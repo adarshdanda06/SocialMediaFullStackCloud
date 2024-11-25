@@ -5,8 +5,6 @@ import { UserContext } from "../UserContext";
 import { useContext } from "react";
 import { Navigate } from 'react-router-dom';
 
-const path = "http://localhost:8000";
-
 
 
 function HomePage() {

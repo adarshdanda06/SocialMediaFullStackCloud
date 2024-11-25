@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const app = express();
-const PORT = process.env.PORT || 8000; // will be using set port later
+const PORT = process.env.PORT || 8000; 
 
 
 const userRoutes = require('./routes/user');

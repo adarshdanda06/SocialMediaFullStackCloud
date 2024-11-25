@@ -4,9 +4,7 @@ import axios from "axios";
 import { UserContext } from '../UserContext';
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
-const path = "http://localhost:8000";
-
+import url from "../serverURL";
 
 
 function NavBar() {
@@ -14,7 +12,7 @@ function NavBar() {
   const navigate = useNavigate();
 
   const api = axios.create({
-    baseURL: path, 
+    baseURL: url, 
     withCredentials: true
   });
 

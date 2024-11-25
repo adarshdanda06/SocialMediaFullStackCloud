@@ -3,7 +3,7 @@ import PostItem from "./PostItem";
 import UserInFollow from "./UserInFollow";
 import axios from "axios";
 import { Link } from "react-router-dom";
-
+import url from "../serverURL";
 
 async function userList(api, user) {
   try {
@@ -18,7 +18,7 @@ async function userList(api, user) {
 function FollowingDashboard({ user, isOpen, onClose }) {
   const [users, setUsers] = useState([]);
   const api = axios.create({
-    baseURL: "http://localhost:8000", 
+    baseURL: url, 
     withCredentials: true
   });
 

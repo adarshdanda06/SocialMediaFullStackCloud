@@ -9,6 +9,8 @@ import PostsDashboard from '../components/PostDashboard';
 import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../UserContext';
+import url from '../serverURL';
+
 
 
 function UserProfilePage() {
@@ -20,7 +22,7 @@ function UserProfilePage() {
   const { user } = useContext(UserContext);
 
   const api = axios.create({
-    baseURL: "http://localhost:8000", 
+    baseURL: url, 
     withCredentials: true
   });
   const [isFollowing, setFollowing] = useState(false);

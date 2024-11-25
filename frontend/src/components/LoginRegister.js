@@ -3,9 +3,7 @@ import { FaUser, FaEnvelope, FaLock, FaGoogle, FaGithub } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../UserContext';
-
-const path = "http://localhost:8000";
-
+import url from '../serverURL';
 
 function LoginRegister(){
   const [isLogin, setIsLogin] = useState(true);

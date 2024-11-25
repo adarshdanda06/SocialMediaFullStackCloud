@@ -2,11 +2,15 @@ import React, { useState, useContext } from 'react';
 import { FaUpload } from 'react-icons/fa';
 import { UserContext } from '../UserContext';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 function CreateProfilePage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [bio, setBio] = useState(null);
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
   const username = "";
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
@@ -18,8 +22,9 @@ function CreateProfilePage() {
     baseURL: "http://localhost:8000", 
     withCredentials: true
   });
-  /*
-  const handleSubmit = async () => {
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     if (!selectedFile || !bio.trim()) {
       alert('Please upload a profile picture and fill in your bio to register.');
       return;
@@ -29,20 +34,25 @@ function CreateProfilePage() {
       return;
     }
     try {
-      const response = await api.post('loginActions/creatingProfile', {
-        "bio": bio,
-        "image": selectedFile
+
+      const formData = new FormData();
+      formData.append('image', selectedFile);
+      formData.append('bio', bio);
+      const response = await api.post('loginActions/creatingProfile', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
 
+      console.log(response)
     } catch (error) {
-      console.log("Error: " + error);
+      console.log("Error occured here: " + error);
+      console.log(bio)
     }
-
-    
-    
+    navigate('/profile')
     // Proceed with registration logic here
     
-  };*/
+  };
 
   return (
     <div className="min-h-screen w-full bg-[#1a1a1a] p-8 flex justify-center items-center">
@@ -51,7 +61,7 @@ function CreateProfilePage() {
           {/* Left Column - Welcome and Create Profile Text */}
           <div className="flex-1 flex flex-col justify-start mt-10">
             <h2 className="text-4xl font-bold text-gray-200 mt-10">Welcome,</h2>
-            <h3 className="text-3xl text-gray-400 mb-12">{username}</h3>
+            <h3 className="text-3xl text-gray-400 mb-12">{user}</h3>
             <div className="text-6xl font-bold text-gray-200 leading-tight">
               <h1>Create Profile</h1>
             </div>
@@ -99,7 +109,8 @@ function CreateProfilePage() {
               />
             </div>
 
-]            <button className="w-full bg-[#2a2a2a] text-white py-3 rounded-lg hover:bg-[#333333] transition-colors">
+            <button className="w-full bg-[#2a2a2a] text-white py-3 rounded-lg hover:bg-[#333333] transition-colors"
+              onClick={handleSubmit}>
               Save Profile
             </button>
           </div>

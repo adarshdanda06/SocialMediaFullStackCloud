@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../UserContext";
 import axios from "axios";
 
-function StatGrid({ currentUser, imgURL }) {
+function StatGrid({ currentUser, imgURL, apiCheck }) {
   const { user } = useContext(UserContext);
   const [stats, setStats] = useState({ followers: 0, following: 0, posts: 0 });
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ function StatGrid({ currentUser, imgURL }) {
     if (currentUser) {
       fetchStats(currentUser);
     }
-  }, [currentUser]);
+  }, [currentUser, apiCheck]);
 
   if (!currentUser) return <p>Loading user...</p>;
   if (loading) return <p>Loading stats...</p>;

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import PostItem from "./PostItem";
 import UserInFollow from "./UserInFollow";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 
 async function userList(api, user) {
   try {
@@ -51,10 +53,12 @@ function FollowingDashboard({ user, isOpen, onClose }) {
         <div className="overflow-y-auto h-[calc(100%-4rem)]">
           <div className="grid grid-cols-1 gap-4">
             {users.map(user => (
-              <UserInFollow 
-                key={user.id} 
-                name={user.name}
-              />
+              <Link 
+                key={user.id}
+                to={`/userProfile/${user.name}`}
+              >
+                <UserInFollow name={user.name} />
+              </Link>
             ))}
           </div>
         </div>

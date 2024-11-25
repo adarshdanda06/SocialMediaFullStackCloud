@@ -22,9 +22,9 @@ function ProfilePage() {
       if (user) {
         const fetched = await api.get(`users/${user}/info`)
         const data = await fetched.data
-        if(data["Bio"]["S"]) {
+        if(data["bio"]["S"]) {
           setBio(prevBio => {
-            const newBio = data["Bio"]["S"];
+            const newBio = data["bio"]["S"];
             console.log("New Bio: " + newBio);
             return newBio;
           });
@@ -32,7 +32,7 @@ function ProfilePage() {
       }
     }
     fetchBio()
-  }, [user]);
+  }, [user, api]);
   useEffect(() => {
     async function fetchImg() {
       if (user) {
@@ -42,14 +42,14 @@ function ProfilePage() {
       }
     }
     fetchImg()
-  }, [user]);
+  }, [user, api]);
 
   return (
     <div className="min-h-screen w-full bg-[#1a1a1a] p-8">
       <div className="max-w-full mx-auto bg-[#212121] rounded-[2rem] shadow-2xl p-8 space-y-8">
         {/* Top Navigation */}
         <NavBar />
-        <StatGrid currentUser={user} imgURL={profilePic} />
+        <StatGrid currentUser={user} imgURL={profilePic} apiCheck={api} />
 
         <div className="grid grid-cols-1 gap-6">
       <EditableField 

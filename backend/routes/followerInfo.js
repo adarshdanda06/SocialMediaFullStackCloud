@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { DynamoDBClient, QueryCommand, TransactWriteItemsCommand, PutItemCommand, ReturnValue } = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient, QueryCommand, TransactWriteItemsCommand, GetItemCommand, ReturnValue } = require("@aws-sdk/client-dynamodb");
 const { awsConfig } = require('../config');
 
 
@@ -63,6 +63,7 @@ router.get('/:userID/followers', async (req, res) => {
         return res.status(500).send(error)
     });
 });
+
 
 
 router.post('/user/follow', async (req, res) => {

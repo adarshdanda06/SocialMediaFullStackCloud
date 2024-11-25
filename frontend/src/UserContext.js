@@ -1,13 +1,14 @@
 // UserContext.js
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-const path = "http://localhost:8000";
+import url from "./serverURL";
+
 const UserContext = createContext();
 
 function UserProvider({ children }) {
   const [user, setUser] = useState(null)
   const api = axios.create({
-    baseURL: path, 
+    baseURL: url, 
     withCredentials: true
   });
 

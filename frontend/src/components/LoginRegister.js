@@ -13,7 +13,7 @@ function LoginRegister(){
   const navigate = useNavigate();
   const { setUser, user } = useContext(UserContext);
   const api = axios.create({
-    baseURL: "http://localhost:8000", 
+    baseURL: url, 
     withCredentials: true
   });
   const toggleForm = () => {

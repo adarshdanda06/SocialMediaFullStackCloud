@@ -15,7 +15,7 @@ const loginRegisterRoutes = require('./routes/loginRegister');
 app.use(cors(
 
     {
-    origin: ['http://localhost:3000', 'http://localhost:8000', 'https://social-media-full-stack-cloud.vercel.app/', 'https://shoe-media.vercel.app/'],
+    origin: ['http://localhost:3000', 'http://localhost:8000', 'https://social-media-full-stack-cloud.vercel.app', 'https://shoe-media.vercel.app'],
     credentials: true
 }
 

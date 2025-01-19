@@ -13,8 +13,10 @@ let awsConfig = {
 
 let s3AwsConfig = {
     'region': 'us-east-2',
-    'accessKeyId': accessKey,
-    'secretAccessKey': secretAccessKey,
+    credentials: {
+        'accessKeyId': accessKey,
+        'secretAccessKey': secretAccessKey
+    },
 }
 
 let dynamoTableName = "dynamoSocialSchema";

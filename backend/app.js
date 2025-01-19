@@ -13,12 +13,12 @@ const postRoutes = require('./routes/postInformation');
 const loginRegisterRoutes = require('./routes/loginRegister');
 
 app.use(cors(
-    /*
+
     {
     origin: ['http://localhost:3000', 'http://localhost:8000'],
     credentials: true
 }
-*/    
+ 
 ));
 /*
 const _dirname = path.dirname("");
@@ -53,6 +53,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+
 app.use('/postInfo', postRoutes);
 app.use('/followingInfo', followingRoutes);
 app.use('/users', userRoutes);
@@ -63,11 +64,11 @@ app.get('*', (req, res) => {
     res.send('404 - Not found');
 });
 
-
+/*
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Listening on localhost:${PORT}`)
 });
-
+*/
 
 
 module.exports = app;

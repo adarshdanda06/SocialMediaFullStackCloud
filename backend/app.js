@@ -54,9 +54,11 @@ app.use('/followingInfo', followingRoutes);
 app.use('/users', userRoutes);
 app.use('/loginActions', loginRegisterRoutes);
 
-app.listen(PORT, '0.0.0.0', () => {
+/*app.listen(PORT, '0.0.0.0', () => {
     console.log(`Listening on localhost:${PORT}`)
-});
+});*/
+
+
 module.exports = app;
 
 

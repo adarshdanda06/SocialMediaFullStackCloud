@@ -12,10 +12,10 @@ const followingRoutes = require('./routes/followerInfo');
 const postRoutes = require('./routes/postInformation');
 const loginRegisterRoutes = require('./routes/loginRegister');
 
-/*app.use(cors({
+app.use(cors({
     origin: ['http://localhost:3000', 'http://localhost:8000'],
     credentials: true
-}));*/
+}));
 /*
 const _dirname = path.dirname("");
 const buildPath = path.join(_dirname, '../frontend/build');

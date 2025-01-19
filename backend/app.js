@@ -70,7 +70,7 @@ app.listen(PORT, '0.0.0.0', () => {
 });
 */
 
-
+console.log(process.env.ACCESS_KEY_ID);
 module.exports = app;
 
 

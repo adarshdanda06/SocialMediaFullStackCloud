@@ -25,11 +25,11 @@ jobs:
               run: npm install
 
             - name: Adding Secret Keys
-              run: node ./config.js
+              run: node ./config.js 
               env:
                 ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
                 SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-            
+
 
             - name: Deploy on Vercel
               run: vercel --prod

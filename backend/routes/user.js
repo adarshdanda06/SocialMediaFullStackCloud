@@ -3,7 +3,6 @@ const router = express.Router();
 const { DynamoDBClient, GetItemCommand, ScanCommand } = require("@aws-sdk/client-dynamodb");
 const { awsConfig, dynamoTableName } = require('../config');
 
-
 const ddbClient = new DynamoDBClient(awsConfig);
 
 router.get('/', (req, res) => {
